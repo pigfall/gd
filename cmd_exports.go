@@ -2,6 +2,7 @@ package gd
 
 import(
 	"os"
+	"path/filepath"
 		
 	"github.com/spf13/cobra"
 )
@@ -47,5 +48,10 @@ func (c *ExportsCmd) Run(cmd *cobra.Command,args []string)error{
 
 func (c *exportsExportCmd) Run(cmd *cobra.Command,args []string)error{
 	godot := newGodotCmd()
-	return godot.Run(os.Stdout,os.Stderr,"--export-debug",args[0],args[1])
+	outputPath := args[1]
+	err := os.MkdirAll(filepath.Dir(outputPath),0755)
+	if err != nil{
+		return err
+	}
+	return godot.Run(os.Stdout,os.Stderr,"--export-debug",args[0],outputPath)
 }
